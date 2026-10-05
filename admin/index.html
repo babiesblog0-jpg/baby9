@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baby Food CMS - Admin Panel</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.png" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="loginPage">
+    <div class="login-container">
+      <div class="login-form">
+        <h1>👶 Baby Food CMS</h1>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Page -->
+  <div id="dashboardPage" style="display: none;">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div>
+          <h1>👶 Baby Food CMS Admin Panel</h1>
+        </div>
+        <div class="user-info">
+          <span>Welcome, <strong id="userName">User</strong></span>
+          <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Main Layout -->
+      <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <h2>Menu</h2>
+          <ul>
+            <li><a href="#" class="active" onclick="switchTab('dashboard')">📊 Dashboard</a></li>
+            <li><a href="#" onclick="switchTab('babyFood')">🍽️ Baby Foods</a></li>
+            <li><a href="#" onclick="switchTab('blog')">📝 Blog Posts</a></li>
+            <li><a href="#" onclick="switchTab('parentingTip')">👨‍👩‍👧 Tips for Parents</a></li>
+            <li><a href="#" onclick="switchTab('parentingGallery')">📷 Parenting Gallery</a></li>
+            <li><a href="#" onclick="switchTab('category')">📂 Categories</a></li>
+            <li><a href="#" onclick="switchTab('pantryIngredient')">🥕 Pantry Ingredients</a></li>
+            <li><a href="#" onclick="switchTab('featuredDelight')">🌟 Featured Delights</a></li>
+            <li><a href="#" onclick="switchTab('fingerFood')">🤏 Finger Foods</a></li>
+            <li><a href="#" onclick="switchTab('product')">🛍️ Shop Products</a></li>
+          </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+          <!-- Dashboard Content -->
+          <div id="dashboardContent" class="main-content active">
+            <div class="content-card">
+              <h2>Dashboard Overview</h2>
+              <div id="dashboardStats"></div>
+            </div>
+          </div>
+
+          <!-- Baby Foods Content -->
+          <div id="babyFoodContent" class="main-content">
+            <div class="content-card">
+              <h2 id="babyFoodFormTitle">Add New Baby Food</h2>
+              <form id="babyFoodForm" onsubmit="handleSaveBabyFood(event)">
+                <input type="hidden" id="babyFoodId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="babyFoodTitle">Title *</label>
+                    <input type="text" id="babyFoodTitle" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="babyFoodAgeGroup">Age Group *</label>
+                    <select id="babyFoodAgeGroup" required>
+                      <option value="">Select Age Group</option>
+                      <option value="6 months">6 months</option>
+                      <option value="8 months">8 months</option>
+                      <option value="10 months">10 months</option>
+                      <option value="12 months">12 months</option>
+                      <option value="1 year">1 year</option>
+                      <option value="2 years">2 years</option>
+                      <option value="3 years">3 years</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="babyFoodCategory">Category *</label>
+                    <select id="babyFoodCategory" required></select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="babyFoodPrepTime">Prep Time (minutes) *</label>
+                    <input type="number" id="babyFoodPrepTime" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="babyFoodServings">Servings *</label>
+                    <input type="number" id="babyFoodServings" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="babyFoodDescription">Description *</label>
+                  <textarea id="babyFoodDescription" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="babyFoodIngredients">Ingredients (comma separated) *</label>
+                  <textarea id="babyFoodIngredients" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="babyFoodInstructions">Instructions *</label>
+                  <textarea id="babyFoodInstructions" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="babyFoodTips">Tips for Parents (one per line, optional)</label>
+                  <textarea id="babyFoodTips" rows="3" placeholder="Provides complete nutrition&#10;No extra water or food needed"></textarea>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="babyFoodImage">Food Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="babyFoodImage" accept="image/*" onchange="previewImage('babyFoodImage', 'babyFoodPreview')" />
+                      <label for="babyFoodImage" class="file-input-label">Click to upload image</label>
+                      <img id="babyFoodPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="babyFoodSubmitBtn" class="btn btn-primary">Add Baby Food</button>
+                  <button type="button" id="babyFoodCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetBabyFoodForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Baby Foods List</h2>
+              <div id="babyFoodList"></div>
+            </div>
+          </div>
+
+          <!-- Blog Content -->
+          <div id="blogContent" class="main-content">
+            <div class="content-card">
+              <h2 id="blogFormTitle">Add New Blog Post</h2>
+              <form id="blogForm" onsubmit="handleSaveBlog(event)">
+                <input type="hidden" id="blogId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="blogTitle">Title *</label>
+                    <input type="text" id="blogTitle" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="blogCategory">Category *</label>
+                    <select id="blogCategory" required>
+                      <option value="nutrition">Nutrition</option>
+                      <option value="recipes">Recipes</option>
+                      <option value="parenting">Parenting</option>
+                      <option value="health">Health</option>
+                      <option value="development">Development</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="blogExcerpt">Excerpt</label>
+                  <textarea id="blogExcerpt" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Content Editor *</label>
+                  <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" onmousedown="event.preventDefault()" onclick="execCommand('bold')"><b>Bold</b></button>
+                    <button type="button" class="editor-btn" onmousedown="event.preventDefault()" onclick="execCommand('italic')"><i>Italic</i></button>
+                    <button type="button" class="editor-btn" onmousedown="event.preventDefault()" onclick="execCommand('underline')"><u>Underline</u></button>
+                    <button type="button" class="editor-btn" onmousedown="event.preventDefault()" onclick="execCommand('insertUnorderedList')">• List</button>
+                    <button type="button" class="editor-btn" onmousedown="event.preventDefault()" onclick="execCommand('createLink', prompt('Enter URL:'))">Link</button>
+                  </div>
+                  <div id="contentEditor" contenteditable="true" style="border: 1px solid #ddd; padding: 10px; min-height: 300px; border-radius: 5px;"></div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="blogTags">Tags (comma separated)</label>
+                    <input type="text" id="blogTags" />
+                  </div>
+                  <div class="form-group">
+                    <label for="blogImage">Featured Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="blogImage" accept="image/*" onchange="previewImage('blogImage', 'blogPreview')" />
+                      <label for="blogImage" class="file-input-label">Click to upload image</label>
+                      <img id="blogPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                  <input type="checkbox" id="blogPublish" />
+                  <label for="blogPublish" style="margin: 0;">Publish immediately</label>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="blogSubmitBtn" class="btn btn-primary">Add Blog Post</button>
+                  <button type="button" id="blogCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetBlogForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Blog Posts List</h2>
+              <div id="blogList"></div>
+            </div>
+          </div>
+
+          <!-- Parenting Tips Content -->
+          <div id="parentingTipContent" class="main-content">
+            <div class="content-card">
+              <h2 id="parentingTipFormTitle">Add New Parenting Tip</h2>
+              <form id="parentingTipForm" onsubmit="handleSaveParentingTip(event)">
+                <input type="hidden" id="parentingTipId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="parentingTipTitle">Title *</label>
+                    <input type="text" id="parentingTipTitle" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="parentingTipCategory">Category *</label>
+                    <select id="parentingTipCategory" required>
+                      <option value="safety">Safety</option>
+                      <option value="health">Health</option>
+                      <option value="development">Development</option>
+                      <option value="bonding">Bonding</option>
+                      <option value="feeding">Feeding</option>
+                      <option value="sleep">Sleep</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="parentingTipExcerpt">Excerpt</label>
+                  <textarea id="parentingTipExcerpt" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Content Editor *</label>
+                  <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" onclick="execCommandTip('bold')"><b>Bold</b></button>
+                    <button type="button" class="editor-btn" onclick="execCommandTip('italic')"><i>Italic</i></button>
+                    <button type="button" class="editor-btn" onclick="execCommandTip('underline')"><u>Underline</u></button>
+                    <button type="button" class="editor-btn" onclick="execCommandTip('insertUnorderedList')">• List</button>
+                    <button type="button" class="editor-btn" onclick="execCommandTip('createLink', prompt('Enter URL:'))">Link</button>
+                  </div>
+                  <div id="tipContentEditor" contenteditable="true" style="border: 1px solid #ddd; padding: 10px; min-height: 300px; border-radius: 5px;"></div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="parentingTipTags">Tags (comma separated)</label>
+                    <input type="text" id="parentingTipTags" />
+                  </div>
+                  <div class="form-group">
+                    <label for="parentingTipImage">Featured Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="parentingTipImage" accept="image/*" onchange="previewImage('parentingTipImage', 'parentingTipPreview')" />
+                      <label for="parentingTipImage" class="file-input-label">Click to upload image</label>
+                      <img id="parentingTipPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                  <input type="checkbox" id="parentingTipPublish" />
+                  <label for="parentingTipPublish" style="margin: 0;">Publish immediately</label>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="parentingTipSubmitBtn" class="btn btn-primary">Add Parenting Tip</button>
+                  <button type="button" id="parentingTipCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetParentingTipForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Parenting Tips List</h2>
+              <div id="parentingTipList"></div>
+            </div>
+          </div>
+
+          <!-- Parenting Gallery Content -->
+          <div id="parentingGalleryContent" class="main-content">
+            <div class="content-card">
+              <h2 id="galleryFormTitle">Add Gallery Photo</h2>
+              <form id="galleryForm" onsubmit="handleSaveGalleryItem(event)">
+                <input type="hidden" id="galleryItemId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="galleryName">Name / Caption *</label>
+                    <input type="text" id="galleryName" placeholder="e.g. Baby Care Tips" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="gallerySortOrder">Sort Order</label>
+                    <input type="number" id="gallerySortOrder" value="0" min="0" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="galleryImage">Photo *</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="galleryImage" accept="image/*" onchange="previewImage('galleryImage', 'galleryPreview')" />
+                      <label for="galleryImage" class="file-input-label">Click to upload photo</label>
+                      <img id="galleryPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: flex; align-items: center; gap: 10px; padding-top: 30px;">
+                    <input type="checkbox" id="galleryActive" checked />
+                    <label for="galleryActive" style="margin: 0;">Active (visible on frontend)</label>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="gallerySubmitBtn" class="btn btn-primary">Add Photo</button>
+                  <button type="button" id="galleryCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetGalleryForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Gallery Photos</h2>
+              <div id="galleryList"></div>
+            </div>
+          </div>
+
+          <!-- Categories Content -->
+          <div id="categoryContent" class="main-content">
+            <div class="content-card">
+              <h2 id="categoryFormTitle">Add New Category</h2>
+              <form id="categoryForm" onsubmit="handleSaveCategory(event)">
+                <input type="hidden" id="categoryId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="categoryName">Category Name *</label>
+                    <input type="text" id="categoryName" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="categoryImage">Category Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="categoryImage" accept="image/*" onchange="previewImage('categoryImage', 'categoryPreview')" />
+                      <label for="categoryImage" class="file-input-label">Click to upload image</label>
+                      <img id="categoryPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="categorySubmitBtn" class="btn btn-primary">Add Category</button>
+                  <button type="button" id="categoryCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetCategoryForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Categories List</h2>
+              <div id="categoryList"></div>
+            </div>
+          </div>
+
+          <!-- Pantry Ingredients Content (used by the AI Recipe Mixer at /reciepe-mixer) -->
+          <div id="pantryIngredientContent" class="main-content">
+            <div class="content-card">
+              <h2 id="pantryIngredientFormTitle">Add New Pantry Ingredient</h2>
+              <form id="pantryIngredientForm" onsubmit="handleSavePantryIngredient(event)">
+                <input type="hidden" id="pantryIngredientId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="pantryIngredientName">Name *</label>
+                    <input type="text" id="pantryIngredientName" placeholder="e.g. Banana" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Icon Source *</label>
+                    <div style="display: flex; gap: 16px; align-items: center; height: 38px;">
+                      <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                        <input type="radio" name="pantryIconSource" id="pantryIconSourceEmoji" value="emoji" checked onchange="togglePantryIconSource()" /> Emoji
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                        <input type="radio" name="pantryIconSource" id="pantryIconSourceImage" value="image" onchange="togglePantryIconSource()" /> Upload image
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" id="pantryIconEmojiGroup">
+                    <label for="pantryIngredientIcon">Emoji</label>
+                    <input type="text" id="pantryIngredientIcon" placeholder="e.g. 🍌" />
+                  </div>
+                  <div class="form-group" id="pantryIconImageGroup" style="display: none;">
+                    <label for="pantryIngredientImage">Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="pantryIngredientImage" accept="image/*" onchange="previewImage('pantryIngredientImage', 'pantryIngredientPreview')" />
+                      <label for="pantryIngredientImage" class="file-input-label">Click to upload image</label>
+                      <img id="pantryIngredientPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="pantryIngredientCategoryGroup">Heading (Category) *</label>
+                    <select id="pantryIngredientCategoryGroup" required>
+                      <option value="">Select a heading</option>
+                    </select>
+                    <small style="color: #888;">Managed in the 📂 Categories section — add a new heading there first if you don't see it here.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="pantryIngredientMinAge">Unlocks at Age *</label>
+                    <select id="pantryIngredientMinAge" required>
+                      <option value="6">6 months</option>
+                      <option value="7">7 months</option>
+                      <option value="8">8 months</option>
+                      <option value="9">9 months</option>
+                      <option value="10">10 months</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                  <input type="checkbox" id="pantryIngredientActive" checked />
+                  <label for="pantryIngredientActive" style="margin: 0;">Active (visible in the AI Recipe Mixer)</label>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="pantryIngredientSubmitBtn" class="btn btn-primary">Add Ingredient</button>
+                  <button type="button" id="pantryIngredientCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetPantryIngredientForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Pantry Ingredients List</h2>
+              <div id="pantryIngredientList"></div>
+            </div>
+          </div>
+
+          <!-- Featured Delights Content (Home page "Featured Delights" section) -->
+          <div id="featuredDelightContent" class="main-content">
+            <div class="content-card">
+              <h2 id="featuredDelightFormTitle">Add New Featured Delight</h2>
+              <form id="featuredDelightForm" onsubmit="handleSaveFeaturedDelight(event)">
+                <input type="hidden" id="featuredDelightId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="featuredDelightTitle">Title *</label>
+                    <input type="text" id="featuredDelightTitle" placeholder="e.g. Sweet Potato Purée" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="featuredDelightAgeLabel">Age Label (optional)</label>
+                    <input type="text" id="featuredDelightAgeLabel" placeholder="e.g. 6-10m" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="featuredDelightDescription">Description *</label>
+                  <textarea id="featuredDelightDescription" rows="3" required placeholder="A silky smooth classic that babies adore..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Icon Source *</label>
+                  <div style="display: flex; gap: 16px; align-items: center; height: 38px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                      <input type="radio" name="featuredIconSource" id="featuredIconSourceEmoji" value="emoji" checked onchange="toggleFeaturedIconSource()" /> Emoji
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                      <input type="radio" name="featuredIconSource" id="featuredIconSourceImage" value="image" onchange="toggleFeaturedIconSource()" /> Upload image
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" id="featuredIconEmojiGroup">
+                    <label for="featuredDelightIcon">Emoji</label>
+                    <input type="text" id="featuredDelightIcon" placeholder="e.g. 🍠" />
+                  </div>
+                  <div class="form-group" id="featuredIconImageGroup" style="display: none;">
+                    <label for="featuredDelightImage">Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="featuredDelightImage" accept="image/*" onchange="previewImage('featuredDelightImage', 'featuredDelightPreview')" />
+                      <label for="featuredDelightImage" class="file-input-label">Click to upload image</label>
+                      <img id="featuredDelightPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="featuredDelightSortOrder">Sort Order</label>
+                    <input type="number" id="featuredDelightSortOrder" value="0" min="0" />
+                  </div>
+                  <div class="form-group" style="display: flex; align-items: center; gap: 10px; padding-top: 30px;">
+                    <input type="checkbox" id="featuredDelightActive" checked />
+                    <label for="featuredDelightActive" style="margin: 0;">Active (visible on the homepage)</label>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="featuredDelightSubmitBtn" class="btn btn-primary">Add Featured Delight</button>
+                  <button type="button" id="featuredDelightCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetFeaturedDelightForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Featured Delights List</h2>
+              <div id="featuredDelightList"></div>
+            </div>
+          </div>
+
+          <!-- Finger Foods Content (AI Recipe Mixer "Finger Foods" tab at /reciepe-mixer) -->
+          <div id="fingerFoodContent" class="main-content">
+            <div class="content-card">
+              <h2 id="fingerFoodFormTitle">Add New Finger Food</h2>
+              <form id="fingerFoodForm" onsubmit="handleSaveFingerFood(event)">
+                <input type="hidden" id="fingerFoodId" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="fingerFoodName">Name *</label>
+                    <input type="text" id="fingerFoodName" placeholder="e.g. Banana Pieces" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="fingerFoodMinAge">Safe from Age *</label>
+                    <select id="fingerFoodMinAge" required>
+                      <option value="10">10 months</option>
+                      <option value="11">11 months</option>
+                      <option value="12">12 months</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fingerFoodDescription">Description *</label>
+                  <textarea id="fingerFoodDescription" rows="2" required placeholder="e.g. Cut into thick coin shapes or 3cm chunks — soft enough to gum easily."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Icon Source *</label>
+                  <div style="display: flex; gap: 16px; align-items: center; height: 38px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                      <input type="radio" name="fingerFoodIconSource" id="fingerFoodIconSourceEmoji" value="emoji" checked onchange="toggleFingerFoodIconSource()" /> Emoji
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; margin: 0;">
+                      <input type="radio" name="fingerFoodIconSource" id="fingerFoodIconSourceImage" value="image" onchange="toggleFingerFoodIconSource()" /> Upload image
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" id="fingerFoodIconEmojiGroup">
+                    <label for="fingerFoodIcon">Emoji</label>
+                    <input type="text" id="fingerFoodIcon" placeholder="e.g. 🍌" />
+                  </div>
+                  <div class="form-group" id="fingerFoodIconImageGroup" style="display: none;">
+                    <label for="fingerFoodImage">Image</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="fingerFoodImage" accept="image/*" onchange="previewImage('fingerFoodImage', 'fingerFoodPreview')" />
+                      <label for="fingerFoodImage" class="file-input-label">Click to upload image</label>
+                      <img id="fingerFoodPreview" class="image-preview" style="display: none;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                  <input type="checkbox" id="fingerFoodActive" checked />
+                  <label for="fingerFoodActive" style="margin: 0;">Active (visible in the AI Recipe Mixer)</label>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="fingerFoodSubmitBtn" class="btn btn-primary">Add Finger Food</button>
+                  <button type="button" id="fingerFoodCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetFingerFoodForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Finger Foods List</h2>
+              <div id="fingerFoodList"></div>
+            </div>
+          </div>
+
+          <!-- Shop Products Content (storefront at /shop) -->
+          <div id="productContent" class="main-content">
+            <div class="content-card">
+              <h2>Shop Disclaimer (scrolling text)</h2>
+              <form id="shopDisclaimerForm" onsubmit="handleSaveShopDisclaimer(event)">
+                <div class="form-group">
+                  <label for="shopDisclaimerText">Text</label>
+                  <textarea id="shopDisclaimerText" rows="3" maxlength="1000" placeholder="e.g. Disclaimer: eBooks are for general educational purposes only…"></textarea>
+                  <small style="color: #888; font-size: 12px;">Scrolls from right to left in red at the top of the shop page. Leave empty to hide it.</small>
+                </div>
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="shopDisclaimerSaveBtn" class="btn btn-primary">Save Text</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2 id="productFormTitle">Add New Product</h2>
+              <form id="productForm" onsubmit="handleSaveProduct(event)">
+                <input type="hidden" id="productId" />
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" placeholder="e.g. First Foods Ebook" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="productBadge">Badge (optional)</label>
+                    <input type="text" id="productBadge" placeholder="e.g. Bestseller" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="productDescriptionEditor">Description *</label>
+                  <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" title="Bold (Ctrl/Cmd+B)" onmousedown="event.preventDefault()" onclick="formatProductDescription('bold')"><b>Bold</b></button>
+                    <button type="button" class="editor-btn" title="Italic (Ctrl/Cmd+I)" onmousedown="event.preventDefault()" onclick="formatProductDescription('italic')"><i>Italic</i></button>
+                    <button type="button" class="editor-btn" title="Bulleted points" onmousedown="event.preventDefault()" onclick="formatProductDescription('insertUnorderedList')">• Points</button>
+                    <button type="button" class="editor-btn" title="Numbered points" onmousedown="event.preventDefault()" onclick="formatProductDescription('insertOrderedList')">1. Numbered</button>
+                    <button type="button" class="editor-btn" title="Remove bold/italic from the selection" onmousedown="event.preventDefault()" onclick="formatProductDescription('removeFormat')">Clear formatting</button>
+                  </div>
+                  <div id="productDescriptionEditor" class="product-description-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="What the customer gets. Press Enter for a new line, use the buttons for bold, italic and points."></div>
+                  <small style="color: #888; font-size: 12px;">Shown exactly like this on the product page. Spaces, new lines, <b>bold</b>, <i>italic</i> and points are kept.</small>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="productMrp">MRP (₹) *</label>
+                    <input type="number" id="productMrp" step="0.01" min="0" placeholder="e.g. 999" required oninput="updateProductPricePreview()" />
+                  </div>
+                  <div class="form-group">
+                    <label for="productDiscount">Discount (%)</label>
+                    <input type="number" id="productDiscount" min="0" max="100" value="0" oninput="updateProductPricePreview()" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Selling Price</label>
+                  <p id="productPricePreview" style="margin: 0; padding: 9px 0; font-size: 18px; font-weight: 700; color: #667eea;">₹0.00</p>
+                  <small style="color: #888; font-size: 12px;">A selling price of ₹0 (MRP 0 or 100% discount) makes it free: "Buy Now" downloads the PDF straight away, with no payment.</small>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="productImage">Product Images</label>
+                    <div class="file-input-wrapper">
+                      <input type="file" id="productImage" accept="image/*" multiple onchange="showProductImagePreviews()" />
+                      <label for="productImage" class="file-input-label">Click to upload images (select several)</label>
+                      <div id="productPreview" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;"></div>
+                    </div>
+                    <small style="color: #888; font-size: 12px;">Up to 8 images, shown as a carousel in the shop. The first is the cover. Uploading replaces the whole set; leave empty when editing to keep the current images.</small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="productPdf">Product PDF (the file buyers receive)</label>
+                  <div class="file-input-wrapper">
+                    <input type="file" id="productPdf" accept="application/pdf,.pdf" onchange="showProductPdfName()" />
+                    <label for="productPdf" class="file-input-label">Click to upload PDF</label>
+                  </div>
+                  <p id="productPdfInfo" style="margin: 6px 0 0; font-size: 13px; color: #555;"></p>
+                  <small style="color: #888; font-size: 12px;">Buyers download this right after paying. Until a PDF is attached, the shop shows the product as "Coming soon" and it can't be bought. Stored privately, never shown publicly. Max 25MB. Leave empty when editing to keep the existing file.</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="productVideoUrl">Video Link (optional)</label>
+                  <input type="url" id="productVideoUrl" placeholder="https://www.youtube.com/watch?v=… or a direct .mp4 link" />
+                  <small style="color: #888; font-size: 12px;">YouTube, Vimeo or a direct video file. Shown instead of the image on the product page. Videos are linked, not uploaded.</small>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="productSortOrder">Sort Order</label>
+                    <input type="number" id="productSortOrder" value="0" min="0" />
+                  </div>
+                  <div class="form-group" style="display: flex; align-items: center; gap: 10px; padding-top: 30px;">
+                    <input type="checkbox" id="productActive" checked />
+                    <label for="productActive" style="margin: 0;">Active (visible in the shop)</label>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                  <button type="submit" id="productSubmitBtn" class="btn btn-primary">Add Product</button>
+                  <button type="button" id="productCancelBtn" class="btn btn-secondary" style="display: none;" onclick="resetProductForm()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2>Products List</h2>
+              <div id="productList"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>
